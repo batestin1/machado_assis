@@ -1,0 +1,16 @@
+{
+    "requests": "http://machado.mec.gov.br/obra-completa-lista/itemlist/category/23-romance",
+    "features":"html.parser",
+    "compile": "^/obra-completa-lista/item/download/",
+    "link": "/obra-completa-lista/",
+    "link2":"http://machado.mec.gov.br/obra-completa-lista/",
+    "pdf_path": "ia/machadoAssis/dl/pdf/",
+    "txt_path": "ia/machadoAssis/dl/txt/",
+    "csv_path": "ia/machadoAssis/dl/csv/",
+    "bronze_path": "ia/machadoAssis/dw/bronze/",
+    "silver_path": "ia/machadoAssis/dw/silver/",
+    "path_gold": "ia/machadoAssis/dw/",
+    "memories": 2108632,
+    "mod": "overwrite"
+
+}

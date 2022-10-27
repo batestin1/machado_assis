@@ -6,7 +6,7 @@
                         #                                                                                #
                         #   filename: read_pdf.py                                                           #
                         #   created: 2022-03-10                                                          #
-                        #   system: Windows                                                              #
+                        #   system: Darwin                                                              #
                         #   version: 64bit                                                               #
                         #                                       by: Bates <https://github.com/batestin1> #
                         #********************************************************************************#
@@ -19,16 +19,32 @@ import os
 import re
 from tqdm import tqdm
 
+import json
 
-main_folder = r'ia/machadoAssis/dl/pdf'
-for root, dirs, files in os.walk(main_folder):
+
+path = "ia/parameters/parameters.json"
+parameter=open(path)
+data = parameter.read()
+content = json.loads(data)
+
+#variables recover
+res = content["requests"]
+html_parser = content["features"]
+comp = content["compile"]
+link_1 = content["link"]
+link_2 = content["link2"]
+pdf_path = content["pdf_path"]
+txt_path = content["txt_path"]
+
+
+for root, dirs, files in os.walk(pdf_path):
     for file in tqdm(files):
-        pdf_file = open(f'{main_folder}/{file}','rb')
+        pdf_file = open(f'{pdf_path}/{file}','rb')
         fl = PyPDF2.PdfFileReader(pdf_file,strict=False)
         title = str(fl.documentInfo['/Title']).replace(r'file://E:\obras\romances\ROMANCE, ','').replace('.htm','').split(',')
         if title[0].replace(' ','_').lower() == 'microsoft_word_-_romance':
             title = title[1].replace(' ','_').lower()
-            txt_out = open(f"ia/machadoAssis/dl/txt/{title[1:]}.txt",'a')
+            txt_out = open(f"{txt_path}{title[1:]}.txt",'a')
             content = fl.getNumPages()
             for i in range(content):
                 page = fl.getPage(i)
@@ -36,7 +52,7 @@ for root, dirs, files in os.walk(main_folder):
                 txt_out.write(script)
         else:
             title = title[0].replace(' ','_').lower()
-            txt_out = open(f"ia/machadoAssis/dl/txt/{title}.txt",'a')
+            txt_out = open(f"{txt_path}{title}.txt",'a')
             content = fl.getNumPages()
             for i in range(content):
                 page = fl.getPage(i)

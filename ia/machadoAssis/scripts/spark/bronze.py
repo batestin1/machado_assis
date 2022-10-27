@@ -19,39 +19,60 @@ from pyspark.sql import SparkSession
 from pyspark import SparkContext
 import os
 import re
+import json
+
+
+path = "ia/parameters/parameters.json"
+parameter=open(path)
+data = parameter.read()
+content = json.loads(data)
+
+#variables recover
+res = content["requests"]
+html_parser = content["features"]
+comp = content["compile"]
+link_1 = content["link"]
+link_2 = content["link2"]
+pdf_path = content["pdf_path"]
+txt_path = content["txt_path"]
+memories = content["memories"]
+csv_path = content["csv_path"]
+bronze_path = content["bronze_path"]
+mod = content["mod"]
+# variables
 
 #variables
 spark = SparkSession.builder.master("local[1]").appName("local").getOrCreate()
 
 #extract session
-mao = spark.read.option("delimiter", ';').option("header", "true").csv("ia/machadoAssis/dl/csv/a_mao_e_a_luva.csv")
+mao = spark.read.option("delimiter", ';').option("header", "true").csv(f"{csv_path}a_mao_e_a_luva.csv")
 mao.createOrReplaceTempView("mao")
 
-casa = spark.read.option("delimiter", ';').option("header", "true").csv("ia/machadoAssis/dl/csv/casa_velha.csv")
+casa = spark.read.option("delimiter", ';').option("header", "true").csv(f"{csv_path}casa_velha.csv")
 casa.createOrReplaceTempView("casa")
 
-dom = spark.read.option("delimiter", ';').option("header", "true").csv("ia/machadoAssis/dl/csv/dom_casmurro.csv")
+dom = spark.read.option("delimiter", ';').option("header", "true").csv(f"{csv_path}dom_casmurro.csv")
 dom.createOrReplaceTempView("dom")
 
-esau = spark.read.option("delimiter", ';').option("header", "true").csv("ia/machadoAssis/dl/csv/esau_e_jaco.csv")
+esau = spark.read.option("delimiter", ';').option("header", "true").csv(f"{csv_path}esau_e_jaco.csv")
 esau.createOrReplaceTempView("esau")
 
-helena = spark.read.option("delimiter", ';').option("header", "true").csv("ia/machadoAssis/dl/csv/helena.csv")
+helena = spark.read.option("delimiter", ';').option("header", "true").csv(f"{csv_path}helena.csv")
 helena.createOrReplaceTempView("helena")
 
-iaia = spark.read.option("delimiter", ';').option("header", "true").csv("ia/machadoAssis/dl/csv/iaiá_garcia.csv")
+iaia = spark.read.option("delimiter", ';').option("header", "true").csv(f"{csv_path}iaiá_garcia.csv")
 iaia.createOrReplaceTempView("iaia")
 
-aires = spark.read.option("delimiter", ';').option("header", "true").csv("ia/machadoAssis/dl/csv/memorial_de_aires.csv")
+aires = spark.read.option("delimiter", ';').option("header", "true").csv(f"{csv_path}memorial_de_aires.csv")
 aires.createOrReplaceTempView("aires")
 
-memorias = spark.read.option("delimiter", ';').option("header", "true").csv("ia/machadoAssis/dl/csv/memorias_postumas_de_bras_cubas.csv")
+memorias = spark.read.option("delimiter", ';').option("header", "true").csv(f"{csv_path}memorias_postumas_de_bras_cubas.csv")
 memorias.createOrReplaceTempView("memorias")
 
-quincas = spark.read.option("delimiter", ';').option("header", "true").csv("ia/machadoAssis/dl/csv/quincas_borba.csv")
+quincas = spark.read.option("delimiter", ';').option("header", "true").csv(f"{csv_path}quincas_borba.csv")
 quincas.createOrReplaceTempView("quincas")
 
-ressur = spark.read.option("delimiter", ';').option("header", "true").csv("ia/machadoAssis/dl/csv/ressurreicao.csv")
+ressur = spark.read.option("delimiter", ';').option("header", "true").csv(f"{csv_path}ressurreicao.csv")
 ressur.createOrReplaceTempView("ressur")
 
 
@@ -88,13 +109,13 @@ ressur = spark.sql("""SELECT * FROM
 
 
 #load process
-mao.write.mode("overwrite").format("parquet").partitionBy("date_processed").save("ia/machadoAssis/dw/bronze/a_mao_e_a_luva")
-casa.write.mode("overwrite").format("parquet").partitionBy("date_processed").save("ia/machadoAssis/dw/bronze/casa_velha")
-dom.write.mode("overwrite").format("parquet").partitionBy("date_processed").save("ia/machadoAssis/dw/bronze/dom_casmurro")
-esau.write.mode("overwrite").format("parquet").partitionBy("date_processed").save("ia/machadoAssis/dw/bronze/esau_e_jaco")
-helena.write.mode("overwrite").format("parquet").partitionBy("date_processed").save("ia/machadoAssis/dw/bronze/helena")
-iaia.write.mode("overwrite").format("parquet").partitionBy("date_processed").save("ia/machadoAssis/dw/bronze/iaiá_garcia")
-aires.write.mode("overwrite").format("parquet").partitionBy("date_processed").save("ia/machadoAssis/dw/bronze/memorial_de_aires")
-memorias.write.mode("overwrite").format("parquet").partitionBy("date_processed").save("ia/machadoAssis/dw/bronze/memorias_postumas_de_bras_cubas")
-quincas.write.mode("overwrite").format("parquet").partitionBy("date_processed").save("ia/machadoAssis/dw/bronze/quincas_borba")
-ressur.write.mode("overwrite").format("parquet").partitionBy("date_processed").save("ia/machadoAssis/dw/bronze/ressurreicao")
+mao.write.mode(mod).format("parquet").partitionBy("date_processed").save(f"{bronze_path}a_mao_e_a_luva")
+casa.write.mode(mod).format("parquet").partitionBy("date_processed").save(f"{bronze_path}casa_velha")
+dom.write.mode(mod).format("parquet").partitionBy("date_processed").save(f"{bronze_path}dom_casmurro")
+esau.write.mode(mod).format("parquet").partitionBy("date_processed").save(f"{bronze_path}esau_e_jaco")
+helena.write.mode(mod).format("parquet").partitionBy("date_processed").save(f"{bronze_path}helena")
+iaia.write.mode(mod).format("parquet").partitionBy("date_processed").save(f"{bronze_path}iaiá_garcia")
+aires.write.mode(mod).format("parquet").partitionBy("date_processed").save(f"{bronze_path}memorial_de_aires")
+memorias.write.mode(mod).format("parquet").partitionBy("date_processed").save(f"{bronze_path}memorias_postumas_de_bras_cubas")
+quincas.write.mode(mod).format("parquet").partitionBy("date_processed").save(f"{bronze_path}quincas_borba")
+ressur.write.mode(mod).format("parquet").partitionBy("date_processed").save(f"{bronze_path}ressurreicao")
