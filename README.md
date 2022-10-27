@@ -36,6 +36,15 @@ At the end, we have a pivot with the total count of all the characters of each w
 The final solution is automatically saved in a folder called DW (DataWarehouse) for further analysis.
 Enjoy the project.</p>
 
+>> <h3> How to Run </h3>
+
+in your terminal (linux ou mac) run:
+
+```
+source start.sh
+
+```
+
 >> <h3> Sample of Data </h3>
 
 ```
